@@ -222,8 +222,7 @@ viewOneBlog(String blogId) async {
 }
 
 userBlogs(String userId) async {
-  final uri =
-      Uri.parse('http://manikandanblog.pythonanywhere.com/getblog/${userId}');
+  final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/userBlog/');
 
   //final headers = {'Authorization': 'Token ' + getCurrentToken().toString()};
   var vresponse, vjsonData;

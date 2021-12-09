@@ -80,7 +80,7 @@ class _BlogPostsState extends State<BlogPosts> {
 
   viewAllBlogs() async {
     var token = await SharedPreferenceHelper().getToken();
-    final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/');
+    final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/userBlog/');
 
     final headers = {'Authorization': 'Token ' + token.toString()};
     var response, statusCode;
