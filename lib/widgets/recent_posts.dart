@@ -54,7 +54,7 @@ class _RecentPostsState extends State<RecentPosts> {
         Uri.parse('http://manikandanblog.pythonanywhere.com/otherUserBlog/');
 
     final headers = {'Authorization': 'Token ' + token.toString()};
-    var vresponse, vjsonData;
+    var vresponse;
     try {
       vresponse = await http.get(
         uri,
@@ -62,7 +62,10 @@ class _RecentPostsState extends State<RecentPosts> {
       );
       //statusCode = vresponse.statusCode;
       vjsonData = jsonDecode(vresponse.body);
-
+      setState(() {
+        vjsonData;
+      });
+      print("test");
       print(vjsonData);
 
       //print(statusCode);
@@ -176,18 +179,18 @@ class _RecentPostsState extends State<RecentPosts> {
                                           SizedBox(width: 20.0),
                                           Row(
                                             children: <Widget>[
-                                              Icon(
-                                                Icons.remove_red_eye,
-                                                color: Colors.grey,
-                                                size: 12.0,
-                                              ),
-                                              SizedBox(width: 5.0),
-                                              Text(
-                                                "7k Views",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                ),
-                                              )
+                                              // Icon(
+                                              //   Icons.remove_red_eye,
+                                              //   color: Colors.grey,
+                                              //   size: 12.0,
+                                              // ),
+                                              // SizedBox(width: 5.0),
+                                              // Text(
+                                              //   "7k Views",
+                                              //   style: TextStyle(
+                                              //     color: Colors.grey,
+                                              //   ),
+                                              // )
                                             ],
                                           ),
                                         ],
