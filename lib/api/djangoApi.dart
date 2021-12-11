@@ -244,15 +244,16 @@ userBlogs(String userId) async {
 }
 
 currentUser() async {
+  var token = await SharedPreferenceHelper().getToken();
   final uri =
       Uri.parse('http://manikandanblog.pythonanywhere.com/currentuser/');
-  //final headers = {'Authorization': 'Token ' + getCurrentToken().toString()};
+  final headers = {'Authorization': 'Token ' + token.toString()};
   var currentuserresponse, responseBody;
 
   try {
     currentuserresponse = await http.get(
       uri,
-      // headers: headers,
+      headers: headers,
       //body: jsonBody,
       //encoding: encoding,
     );
@@ -266,7 +267,7 @@ currentUser() async {
     print(e);
     print('error on current user');
   }
-  return responseBody;
+  return responseBody['username'];
 }
 
 deleteTokens() async {

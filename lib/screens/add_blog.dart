@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:blogone/api/djangoApi.dart';
-import 'package:blogone/screens/home_screen.dart';
+
+import 'package:blogone/screens/card.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
+
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 
@@ -76,7 +77,14 @@ class _AddBlogState extends State<AddBlog> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        SnackBar(
+          content: Text("Image fetched"),
+        );
+        print('image fetched');
       } else {
+        SnackBar(
+          content: Text("Image cannot able to fetched"),
+        );
         print('No image selected.');
       }
     });
@@ -177,11 +185,13 @@ class _AddBlogState extends State<AddBlog> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Image.file(_image),
             // SizedBox(
+            //   height: 200,
             //   child: Flexible(
             //       child:
             //           // ignore: unnecessary_null_comparison
-            //           _image != null ? Image.file(_image) : Text('no Image')),
+            //           _image != null ? Text("Image got") : Text('no Image')),
             // ),
             TextFormField(
               controller: titlecontroller,
@@ -191,7 +201,10 @@ class _AddBlogState extends State<AddBlog> {
                 //labelText: 'Blog Title',
               ),
             ),
+
             TextFormField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
               controller: desccontroller,
               decoration: const InputDecoration(
                 icon: const Icon(Icons.person),
@@ -211,7 +224,7 @@ class _AddBlogState extends State<AddBlog> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                HomeScreen(value: widget.value)));
+                                CardView(value: widget.value)));
                   });
                 },
                 child: Text("Create Blog")),

@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:blogone/screens/card.dart';
 import 'package:http/http.dart' as http;
 import 'package:blogone/api/djangoApi.dart';
 import 'package:blogone/screens/forgetpassword_screen.dart';
-import 'package:blogone/screens/home_screen.dart';
+
 import 'package:blogone/sharedPreference/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -115,8 +116,7 @@ class _LoginState extends State<Login> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen(value: token)));
+                                builder: (context) => CardView(value: token)));
                       } else {
                         Fluttertoast.showToast(
                             msg: "Invalid Credentials",
@@ -199,7 +199,7 @@ class _LoginState extends State<Login> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      HomeScreen(value: token)));
+                                      CardView(value: token)));
                         } else {
                           Fluttertoast.showToast(
                               msg: "Invalid Credentials",

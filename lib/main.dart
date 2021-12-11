@@ -1,15 +1,11 @@
+import 'package:blogone/screens/card.dart';
 import 'package:blogone/screens/signin_screen.dart';
 import 'package:blogone/sharedPreference/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:load/load.dart';
 
-import 'screens/home_screen.dart';
-
 var token;
 void main() async {
-  //To initialize firebase core
-  WidgetsFlutterBinding.ensureInitialized();
-
   token = await SharedPreferenceHelper().getToken();
   print('---------------------------');
   print(token);
@@ -34,7 +30,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: token == null ? "signin" : "/",
       routes: {
-        '/': (context) => HomeScreen(value: token),
+        '/': (context) => CardView(value: token),
         "signin": (context) => SignIn()
       },
     );
