@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:blogone/sharedPreference/sharedPref.dart';
+
 import 'package:load/load.dart';
 
 var jsonData;
 
 class SavedBlogs extends StatefulWidget {
-  const SavedBlogs({Key? key}) : super(key: key);
+  final String value;
+  const SavedBlogs({Key? key, required this.value}) : super(key: key);
 
   @override
   _SavedBlogsState createState() => _SavedBlogsState();
@@ -20,11 +21,11 @@ class SavedBlogs extends StatefulWidget {
 
 class _SavedBlogsState extends State<SavedBlogs> {
   savedBlogs() async {
-    var token = await SharedPreferenceHelper().getToken();
+    //var token = await SharedPreferenceHelper().getToken();
     final uri =
         Uri.parse('http://manikandanblog.pythonanywhere.com/savedBlog/');
 
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var response, statusCode;
     try {
       response = await http.get(
@@ -73,8 +74,8 @@ class _SavedBlogsState extends State<SavedBlogs> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  CardFullView(blogid: i['blog_id'])));
+                              builder: (context) => CardFullView(
+                                  blogid: i['blog_id'], value: widget.value)));
                     },
                     child: GFCard(
                       boxFit: BoxFit.cover,

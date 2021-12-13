@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:blogone/screens/card.dart';
 import 'package:http/http.dart' as http;
-import 'package:blogone/api/djangoApi.dart';
-import 'package:blogone/screens/forgetpassword_screen.dart';
 
-import 'package:blogone/sharedPreference/sharedPref.dart';
+import 'package:blogone/screens/forgetpassword_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:blogone/screens/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:load/load.dart';
@@ -21,11 +21,11 @@ class _LoginState extends State<Login> {
   var passwordcontroller = new TextEditingController();
 
   bool _isObscure = true;
-  var token;
+  var token, responsebody, statusCode;
   login() async {
     final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/login/');
     final headers = {'Content-Type': 'application/json'};
-    var statusCode, responsebody;
+
     Map<String, dynamic> body = {
       "username": usernamecontroller.text.trim(),
       "password": passwordcontroller.text.trim(),
@@ -47,12 +47,10 @@ class _LoginState extends State<Login> {
       print(responsebody);
       SharedPreferenceHelper().saveToken(responsebody["token"]);
       token = responsebody["token"];
-      setState(() {
-        token;
-      });
+      setState(() {});
       print(token);
     } on Exception catch (e) {
-      print("error on login django api");
+      print("error on login django api $e");
     }
     return statusCode;
   }

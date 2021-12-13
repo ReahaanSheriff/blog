@@ -1,4 +1,5 @@
-import 'package:blogone/api/djangoApi.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:blogone/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,6 +18,38 @@ class _SignInState extends State<SignIn> {
   bool _isObscure = true;
   bool _isConObscure = true;
   var passwordcontroller = new TextEditingController();
+
+  signin() async {
+    final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/register/');
+    final headers = {'Content-Type': 'application/json'};
+    var statuscode, responseBody;
+
+    Map<String, dynamic> body = {
+      "username": usernamecontroller.text.trim(),
+      "email": emailcontroller.text.trim(),
+      "password": passwordcontroller.text.trim()
+    };
+    String jsonBody = json.encode(body);
+    final encoding = Encoding.getByName('utf-8');
+    var response;
+
+    try {
+      response = await http.post(
+        uri,
+        headers: headers,
+        body: jsonBody,
+        encoding: encoding,
+      );
+      statuscode = response.statusCode;
+      responseBody = jsonDecode(response.body);
+
+      print(responseBody);
+      print(statuscode);
+    } on Exception catch (e) {
+      print("Error in signin django api $e");
+    }
+    return statuscode;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +179,7 @@ class _SignInState extends State<SignIn> {
                       fontSize: 16.0);
                 } else {
                   try {
-                    signin(usernamecontroller.text, emailcontroller.text,
-                            passwordcontroller.text)
-                        .then((value) {
+                    signin().then((value) {
                       if (value == 201) {
                         Fluttertoast.showToast(
                             msg: "Registered Successfully",
@@ -277,9 +308,7 @@ class _SignInState extends State<SignIn> {
                         fontSize: 16.0);
                   } else {
                     try {
-                      signin(usernamecontroller.text, emailcontroller.text,
-                              passwordcontroller.text)
-                          .then((value) {
+                      signin().then((value) {
                         if (value == 201) {
                           Fluttertoast.showToast(
                               msg: "Registered Successfully",

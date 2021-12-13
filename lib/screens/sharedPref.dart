@@ -11,7 +11,13 @@ class SharedPreferenceHelper {
 
   // get data
   Future<String?> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(tokenKey);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      return prefs.getString(tokenKey);
+    } on Exception catch (e) {
+      // TODO
+      print(e);
+    }
   }
 }

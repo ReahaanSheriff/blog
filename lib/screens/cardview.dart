@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:blogone/screens/savedblogs_screen.dart';
-import 'package:blogone/sharedPreference/sharedPref.dart';
+import 'package:blogone/screens/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:load/load.dart';
 
 class CardFullView extends StatefulWidget {
   final String blogid;
-  const CardFullView({Key? key, id, required this.blogid}) : super(key: key);
+  final String value;
+  const CardFullView({Key? key, id, required this.blogid, required this.value})
+      : super(key: key);
 
   @override
   _CardFullViewState createState() => _CardFullViewState();
@@ -19,11 +21,10 @@ class _CardFullViewState extends State<CardFullView> {
   final double circleBorderWidth = 8.0;
   var vjsonData, username;
   viewOneBlog() async {
-    var token = await SharedPreferenceHelper().getToken();
     final uri = Uri.parse(
         'http://manikandanblog.pythonanywhere.com/getblog/${widget.blogid}');
 
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var vresponse;
     try {
       vresponse = await http.get(
@@ -39,7 +40,7 @@ class _CardFullViewState extends State<CardFullView> {
 
       //print(statusCode);
     } on Exception catch (e) {
-      print("error on view one blog django api");
+      print("error on view one blog django api $e");
     }
     return vjsonData;
   }
@@ -251,34 +252,42 @@ class _CardFullViewState extends State<CardFullView> {
                     if (vjsonData != null)
                       if ('${vjsonData['liked']}' == "false" &&
                           '${vjsonData['username']}' != username)
-                        ElevatedButton(
-                            onPressed: () {
-                              saveBlog().then((_) {
-                                showLoadingDialog();
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SavedBlogs()));
-                              });
-                              print('saving');
-                            },
-                            child: Text("save")),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 300.0),
+                          child: IconButton(
+                              onPressed: () {
+                                saveBlog().then((_) {
+                                  showLoadingDialog();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SavedBlogs(value: widget.value)));
+                                });
+                                print('saving');
+                              },
+                              icon: Icon(Icons.favorite_border)),
+                        ),
                     if (vjsonData == null) Text(""),
                     if (vjsonData != null)
                       if ('${vjsonData['liked']}' == "true" &&
                           '${vjsonData['username']}' != username)
-                        ElevatedButton(
-                            onPressed: () {
-                              unsaveBlog().then((_) {
-                                showLoadingDialog();
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SavedBlogs()));
-                              });
-                              print('unsaving');
-                            },
-                            child: Text("Unsave")),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 300.0),
+                          child: IconButton(
+                              onPressed: () {
+                                unsaveBlog().then((_) {
+                                  showLoadingDialog();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SavedBlogs(value: widget.value)));
+                                });
+                                print('unsaving');
+                              },
+                              icon: Icon(Icons.favorite)),
+                        ),
                     SizedBox(height: 15.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

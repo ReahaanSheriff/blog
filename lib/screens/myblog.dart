@@ -1,13 +1,14 @@
 import 'package:blogone/screens/cardview.dart';
-import 'package:blogone/sharedPreference/sharedPref.dart';
+
 import 'package:http/http.dart' as http;
-import 'dart:async';
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
 class MyBlog extends StatefulWidget {
-  const MyBlog({Key? key}) : super(key: key);
+  final String value;
+  const MyBlog({Key? key, required this.value}) : super(key: key);
 
   @override
   _MyBlogState createState() => _MyBlogState();
@@ -16,10 +17,10 @@ class MyBlog extends StatefulWidget {
 class _MyBlogState extends State<MyBlog> {
   var jsonData, username;
   currentUser() async {
-    var token = await SharedPreferenceHelper().getToken();
+    //var token = await SharedPreferenceHelper().getToken();
     final uri =
         Uri.parse('http://manikandanblog.pythonanywhere.com/currentuser/');
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var currentuserresponse, responseBody;
 
     try {
@@ -44,10 +45,10 @@ class _MyBlogState extends State<MyBlog> {
   }
 
   viewUserBlogs() async {
-    var token = await SharedPreferenceHelper().getToken();
+    //var token = await SharedPreferenceHelper().getToken();
     final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/userBlog/');
 
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var response, statusCode;
     try {
       response = await http.get(
@@ -66,7 +67,7 @@ class _MyBlogState extends State<MyBlog> {
         jsonData;
       });
     } on Exception catch (e) {
-      print("error on view all blogs django api");
+      print("error on view all blogs django api $e");
     }
     return jsonData;
   }
@@ -97,8 +98,8 @@ class _MyBlogState extends State<MyBlog> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  CardFullView(blogid: i['blog_id'])));
+                              builder: (context) => CardFullView(
+                                  blogid: i['blog_id'], value: widget.value)));
                     },
                     child: GFCard(
                       boxFit: BoxFit.cover,

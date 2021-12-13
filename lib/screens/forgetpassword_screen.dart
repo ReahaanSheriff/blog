@@ -1,4 +1,5 @@
-import 'package:blogone/api/djangoApi.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:blogone/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +16,66 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   var tokencontroller = new TextEditingController();
   var passwordcontroller = new TextEditingController();
   bool _isObscure = true;
+
+  forgetpassword() async {
+    final uri =
+        Uri.parse('http://manikandanblog.pythonanywhere.com/password_reset/');
+    final headers = {'Content-Type': 'application/json'};
+    var response, fstatuscode, forgetresponsebody;
+    Map<String, dynamic> body = {
+      "email": emailcontroller.text.trim(),
+    };
+    String jsonBody = json.encode(body);
+    final encoding = Encoding.getByName('utf-8');
+
+    try {
+      response = await http.post(
+        uri,
+        headers: headers,
+        body: jsonBody,
+        encoding: encoding,
+      );
+      fstatuscode = response.statusCode;
+      forgetresponsebody = json.decode(response.body);
+      print(fstatuscode);
+    } on Exception catch (e) {
+      print(e);
+    }
+    return fstatuscode;
+  }
+
+  resetpassword() async {
+    final uri = Uri.parse(
+        'http://manikandanblog.pythonanywhere.com/password_reset/confirm/');
+    final headers = {'Content-Type': 'application/json'};
+
+    Map<String, dynamic> body = {
+      "password": passwordcontroller.text.trim(),
+      "token": tokencontroller.text.trim()
+    };
+    String jsonBody = json.encode(body);
+    final encoding = Encoding.getByName('utf-8');
+    var response, rstatuscode, resetresponsebody;
+
+    try {
+      response = await http.post(
+        uri,
+        headers: headers,
+        body: jsonBody,
+        encoding: encoding,
+      );
+      rstatuscode = response.statusCode;
+      resetresponsebody = jsonDecode(response.body);
+
+      print(resetresponsebody);
+      print(rstatuscode);
+      //print(statusCode);
+    } on Exception catch (e) {
+      print("error in reset password django api $e");
+    }
+    return rstatuscode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +106,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  forgetpassword(emailcontroller.text.trim()).then((value) {
+                  forgetpassword().then((value) {
                     if (value == 200) {
                       Fluttertoast.showToast(
                           msg: "Mail Send Successfully",
@@ -100,9 +161,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 )),
             ElevatedButton(
                 onPressed: () {
-                  resetpassword(passwordcontroller.text.trim(),
-                          tokencontroller.text.trim())
-                      .then((value) {
+                  resetpassword().then((value) {
                     if (value == 200) {
                       Fluttertoast.showToast(
                           msg: "Reset Password Successful",

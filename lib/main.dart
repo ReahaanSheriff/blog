@@ -1,12 +1,14 @@
 import 'package:blogone/screens/card.dart';
 import 'package:blogone/screens/signin_screen.dart';
-import 'package:blogone/sharedPreference/sharedPref.dart';
+import 'package:blogone/screens/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:load/load.dart';
 
 var token;
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   token = await SharedPreferenceHelper().getToken();
+
   print('---------------------------');
   print(token);
   print('---------------------------');
@@ -19,12 +21,19 @@ void main() async {
           child: MyApp())));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Anni Blog',
+      title: 'Blog',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

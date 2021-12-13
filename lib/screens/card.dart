@@ -4,12 +4,13 @@ import 'package:blogone/screens/add_blog.dart';
 import 'package:blogone/screens/myblog.dart';
 import 'package:blogone/screens/savedblogs_screen.dart';
 import 'package:blogone/screens/signin_screen.dart';
-import 'package:blogone/sharedPreference/sharedPref.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:blogone/screens/cardview.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:load/load.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardView extends StatefulWidget {
@@ -26,10 +27,10 @@ class _CardViewState extends State<CardView> {
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
   currentUser() async {
-    var token = await SharedPreferenceHelper().getToken();
+    //var token = await SharedPreferenceHelper().getToken();
     final uri =
         Uri.parse('http://manikandanblog.pythonanywhere.com/currentuser/');
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var currentuserresponse, responseBody;
 
     try {
@@ -54,10 +55,10 @@ class _CardViewState extends State<CardView> {
   }
 
   viewAllBlogs() async {
-    var token = await SharedPreferenceHelper().getToken();
+    //var token = await SharedPreferenceHelper().getToken();
     final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/');
 
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var response, statusCode;
     try {
       response = await http.get(
@@ -76,7 +77,7 @@ class _CardViewState extends State<CardView> {
         jsonData;
       });
     } on Exception catch (e) {
-      print("error on view all blogs django api");
+      print("error on view all blogs django api $e");
     }
     return jsonData;
   }
@@ -84,10 +85,9 @@ class _CardViewState extends State<CardView> {
   deleteTokens() async {
     final uri =
         Uri.parse('http://manikandanblog.pythonanywhere.com/deletetokens/');
-    var currentuserresponse;
 
     try {
-      currentuserresponse = await http.post(
+      var currentuserresponse = await http.post(
         uri,
       );
     } on Exception catch (e) {
@@ -98,10 +98,9 @@ class _CardViewState extends State<CardView> {
   signout() async {
     final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/logout/');
     final headers = {'Authorization': 'Token ' + widget.value.toString()};
-    var currentuserresponse;
 
     try {
-      currentuserresponse = await http.post(
+      var currentuserresponse = await http.post(
         uri,
         headers: headers,
         //body: jsonBody,
@@ -160,8 +159,10 @@ class _CardViewState extends State<CardView> {
                 // Update the state of the app.
                 // ...
                 // Then close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SavedBlogs()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SavedBlogs(value: widget.value)));
               },
             ),
             ListTile(
@@ -171,14 +172,18 @@ class _CardViewState extends State<CardView> {
                 // ...
                 // Then close the drawer
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => MyBlog()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyBlog(value: widget.value)));
               },
             ),
             IconButton(
                 onPressed: () {
                   signout().then((_) async {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => SignIn()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     prefs.clear();
@@ -218,8 +223,8 @@ class _CardViewState extends State<CardView> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  CardFullView(blogid: i['blog_id'])));
+                              builder: (context) => CardFullView(
+                                  blogid: i['blog_id'], value: widget.value)));
                     },
                     child: GFCard(
                       boxFit: BoxFit.cover,
@@ -251,12 +256,23 @@ class _CardViewState extends State<CardView> {
                               width: 20,
                             ),
                             IconButton(
-                                onPressed: () {}, icon: Icon(Icons.share)),
+                                onPressed: () {
+                                  Share.share(
+                                      'Checkout this post from blog app ' +
+                                          i['title'] +
+                                          ' \n' +
+                                          i['short'] +
+                                          '.....');
+                                },
+                                icon: Icon(Icons.share)),
                             Padding(padding: EdgeInsets.only(top: 50))
                           ],
                         )),
                       ),
-                      content: Text("${i['body']}\n"),
+                      // content: "${i['body']}".length > 20
+                      //     ? Text("${i['body']}".substring(0, 25))
+                      //     : Text("${i['body']}".substring(5)),
+                      content: Text("${i['short']}"),
                       buttonBar: GFButtonBar(
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 220)),
