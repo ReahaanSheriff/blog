@@ -19,7 +19,7 @@ class CardFullView extends StatefulWidget {
 class _CardFullViewState extends State<CardFullView> {
   final double circleRadius = 100.0;
   final double circleBorderWidth = 8.0;
-  var vjsonData, username;
+  var vjsonData, username, userid;
   viewOneBlog() async {
     final uri = Uri.parse(
         'http://manikandanblog.pythonanywhere.com/getblog/${widget.blogid}');
@@ -62,6 +62,7 @@ class _CardFullViewState extends State<CardFullView> {
 
       responseBody = jsonDecode(currentuserresponse.body);
       setState(() {
+        userid = responseBody['id'];
         username = responseBody['username'];
       });
       print(responseBody);
@@ -87,7 +88,8 @@ class _CardFullViewState extends State<CardFullView> {
       "created": '${vjsonData['created']}'.toString(),
       "title": '${vjsonData['title']}'.toString(),
       "body": '${vjsonData['body']}'.toString(),
-      "liked": "true"
+      "liked": "true",
+      "likedby": userid
     };
     String jsonBody = json.encode(body);
     //final encoding = Encoding.getByName('utf-8');

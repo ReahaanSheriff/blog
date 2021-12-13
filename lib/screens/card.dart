@@ -58,7 +58,10 @@ class _CardViewState extends State<CardView> {
     //var token = await SharedPreferenceHelper().getToken();
     final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/');
 
-    final headers = {'Authorization': 'Token ' + widget.value.toString()};
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ' + widget.value.toString()
+    };
     var response, statusCode;
     try {
       response = await http.get(
@@ -70,9 +73,7 @@ class _CardViewState extends State<CardView> {
 
       print(statusCode);
       print(jsonData);
-      for (var i in jsonData) {
-        print(i['image']);
-      }
+
       setState(() {
         jsonData;
       });
