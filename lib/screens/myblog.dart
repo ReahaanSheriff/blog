@@ -46,7 +46,6 @@ class _MyBlogState extends State<MyBlog> {
   }
 
   viewUserBlogs() async {
-    //var token = await SharedPreferenceHelper().getToken();
     final uri = Uri.parse('http://manikandanblog.pythonanywhere.com/userBlog/');
 
     final headers = {'Authorization': 'Token ' + widget.value.toString()};
@@ -71,6 +70,23 @@ class _MyBlogState extends State<MyBlog> {
       print("error on view all blogs django api $e");
     }
     return jsonData;
+  }
+
+  deleteBlog(String blogId) async {
+    final uri = Uri.parse(
+        'http://manikandanblog.pythonanywhere.com/deleteBlog/$blogId');
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
+
+    try {
+      var currentuserresponse = await http.delete(
+        uri,
+        headers: headers,
+        //body: jsonBody,
+        //encoding: encoding,
+      );
+    } on Exception catch (e) {
+      print("Error on deleteBlog function $e");
+    }
   }
 
   @override
@@ -135,6 +151,17 @@ class _MyBlogState extends State<MyBlog> {
                                           '.....');
                                 },
                                 icon: Icon(Icons.share)),
+                            IconButton(
+                                onPressed: () {
+                                  deleteBlog(i['blog_id']).then((_) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyBlog(value: widget.value)));
+                                  });
+                                },
+                                icon: Icon(Icons.delete)),
                             Padding(padding: EdgeInsets.only(top: 50))
                           ],
                         )),

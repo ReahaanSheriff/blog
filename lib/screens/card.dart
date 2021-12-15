@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:blogone/screens/add_blog.dart';
 import 'package:blogone/screens/myblog.dart';
 import 'package:blogone/screens/savedblogs_screen.dart';
+import 'package:blogone/screens/search.dart';
 import 'package:blogone/screens/signin_screen.dart';
 
 import 'package:http/http.dart' as http;
@@ -140,7 +141,11 @@ class _CardViewState extends State<CardView> {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text(username == null ? "" : username),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 50.0, horizontal: 80),
+                child: Text(username == null ? "" : username),
+              ),
             ),
             ListTile(
               title: const Text('Home'),
@@ -178,6 +183,18 @@ class _CardViewState extends State<CardView> {
                         builder: (context) => MyBlog(value: widget.value)));
               },
             ),
+            ListTile(
+              title: const Text('Search Blogs'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                // Then close the drawer
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SearchBlog(value: widget.value)));
+              },
+            ),
             IconButton(
                 onPressed: () {
                   signout().then((_) async {
@@ -191,10 +208,13 @@ class _CardViewState extends State<CardView> {
                     deleteTokens();
                   });
                 },
-                icon: Icon(
-                  Icons.logout,
-                  size: 32.0,
-                  color: Colors.black,
+                icon: Padding(
+                  padding: const EdgeInsets.only(right: 245),
+                  child: Icon(
+                    Icons.logout,
+                    size: 32.0,
+                    color: Colors.black,
+                  ),
                 ))
           ],
         ),
