@@ -259,6 +259,7 @@ class _CardViewState extends State<CardView> {
                       showImage: true,
                       title: GFListTile(
                         avatar: GFAvatar(
+                          size: 20,
                           backgroundImage: NetworkImage(
                               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQfUbi5bgcsNaRtcbmG7dR3R8e_kLca43xIg&usqp=CAU'),
                         ),
