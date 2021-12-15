@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:blogone/screens/savedblogs_screen.dart';
-import 'package:blogone/screens/sharedPref.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:load/load.dart';

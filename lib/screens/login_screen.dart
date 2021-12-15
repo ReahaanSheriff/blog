@@ -3,7 +3,7 @@ import 'package:blogone/screens/card.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:blogone/screens/forgetpassword_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:blogone/screens/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -128,7 +128,7 @@ class _LoginState extends State<Login> {
                     });
                   } on Exception catch (e) {
                     Fluttertoast.showToast(
-                        msg: "Invalid Credentials",
+                        msg: "Invalid Credentials $e",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.CENTER,
                         timeInSecForIosWeb: 4,
@@ -211,7 +211,7 @@ class _LoginState extends State<Login> {
                       });
                     } on Exception catch (e) {
                       Fluttertoast.showToast(
-                          msg: "Invalid Credentials",
+                          msg: "Invalid Credentials $e",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.CENTER,
                           timeInSecForIosWeb: 4,
