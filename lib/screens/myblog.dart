@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:share/share.dart';
 
 class MyBlog extends StatefulWidget {
   final String value;
@@ -121,16 +122,24 @@ class _MyBlogState extends State<MyBlog> {
                         icon: Container(
                             child: Row(
                           children: [
-                            Icon(Icons.favorite_border),
                             SizedBox(
                               width: 20,
                             ),
-                            Icon(Icons.share),
+                            IconButton(
+                                onPressed: () {
+                                  Share.share(
+                                      'Checkout this post from blog app \n' +
+                                          i['title'] +
+                                          ' \n' +
+                                          i['short'] +
+                                          '.....');
+                                },
+                                icon: Icon(Icons.share)),
                             Padding(padding: EdgeInsets.only(top: 50))
                           ],
                         )),
                       ),
-                      content: Text("${i['body']}\n"),
+                      content: Text("${i['short']}\n"),
                       buttonBar: GFButtonBar(
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 220)),

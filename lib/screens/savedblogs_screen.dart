@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:load/load.dart';
 
-var jsonData;
+var jsonData, userid, username;
 
 class SavedBlogs extends StatefulWidget {
   final String value;
@@ -20,6 +20,35 @@ class SavedBlogs extends StatefulWidget {
 }
 
 class _SavedBlogsState extends State<SavedBlogs> {
+  currentUser() async {
+    //var token = await SharedPreferenceHelper().getToken();
+    final uri =
+        Uri.parse('http://manikandanblog.pythonanywhere.com/currentuser/');
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
+    var currentuserresponse, responseBody;
+
+    try {
+      currentuserresponse = await http.get(
+        uri,
+        headers: headers,
+        //body: jsonBody,
+        //encoding: encoding,
+      );
+
+      responseBody = jsonDecode(currentuserresponse.body);
+      setState(() {
+        userid = responseBody['id'];
+        username = responseBody['username'];
+      });
+      print(responseBody);
+
+      //print(responseBody['id']);
+    } on Exception catch (e) {
+      print(e);
+      print('error on current user');
+    }
+  }
+
   savedBlogs() async {
     //var token = await SharedPreferenceHelper().getToken();
     final uri =
@@ -97,9 +126,6 @@ class _SavedBlogsState extends State<SavedBlogs> {
                         icon: Container(
                             child: Row(
                           children: [
-                            if ('${i['liked']}' == "false")
-                              Icon(Icons.favorite_border),
-                            if ('${i['liked']}' == "true") Icon(Icons.favorite),
                             SizedBox(
                               width: 20,
                             ),
@@ -108,7 +134,7 @@ class _SavedBlogsState extends State<SavedBlogs> {
                           ],
                         )),
                       ),
-                      content: Text("${i['body']}\n"),
+                      content: Text("${i['short']}\n"),
                       buttonBar: GFButtonBar(
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 220)),

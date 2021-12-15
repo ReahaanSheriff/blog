@@ -46,10 +46,9 @@ class _CardFullViewState extends State<CardFullView> {
   }
 
   currentUser() async {
-    var token = await SharedPreferenceHelper().getToken();
     final uri =
         Uri.parse('http://manikandanblog.pythonanywhere.com/currentuser/');
-    final headers = {'Authorization': 'Token ' + token.toString()};
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     var currentuserresponse, responseBody;
 
     try {
@@ -75,12 +74,11 @@ class _CardFullViewState extends State<CardFullView> {
   }
 
   saveBlog() async {
-    var token = await SharedPreferenceHelper().getToken();
     final uri = Uri.parse(
         'http://manikandanblog.pythonanywhere.com/updateBlog/${widget.blogid}');
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Token ' + token.toString()
+      'Authorization': 'Token ' + widget.value.toString()
     };
     Map<String, dynamic> body = {
       "blog_id": widget.blogid,
@@ -88,8 +86,7 @@ class _CardFullViewState extends State<CardFullView> {
       "created": '${vjsonData['created']}'.toString(),
       "title": '${vjsonData['title']}'.toString(),
       "body": '${vjsonData['body']}'.toString(),
-      "liked": "true",
-      "likedby": userid
+      "likes": List.filled(userid, userid, growable: true),
     };
     String jsonBody = json.encode(body);
     //final encoding = Encoding.getByName('utf-8');
@@ -113,41 +110,19 @@ class _CardFullViewState extends State<CardFullView> {
     }
   }
 
-  unsaveBlog() async {
-    var token = await SharedPreferenceHelper().getToken();
+  unSaveBlog() async {
     final uri = Uri.parse(
-        'http://manikandanblog.pythonanywhere.com/updateBlog/${widget.blogid}');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Token ' + token.toString()
-    };
-    Map<String, dynamic> body = {
-      "blog_id": widget.blogid,
-      "user_id_id": '${vjsonData['user_id_id']}'.toString(),
-      "created": '${vjsonData['created']}'.toString(),
-      "title": '${vjsonData['title']}'.toString(),
-      "body": '${vjsonData['body']}'.toString(),
-      "liked": "false"
-    };
-    String jsonBody = json.encode(body);
-    //final encoding = Encoding.getByName('utf-8');
-    var response;
-    int statusCode;
-    String responseBody;
+        'http://manikandanblog.pythonanywhere.com/unSaveBlog/${widget.blogid}');
+    final headers = {'Authorization': 'Token ' + widget.value.toString()};
     try {
-      response = await http.put(
+      var currentresponse = await http.post(
         uri,
         headers: headers,
-        body: jsonBody,
+        //body: jsonBody,
         //encoding: encoding,
       );
-      statusCode = response.statusCode;
-      responseBody = response.body;
-      print(responseBody);
-      print(statusCode);
     } on Exception catch (e) {
-      print(e);
-      print("error on update blog func");
+      print("Error on unSaveBlog function $e");
     }
   }
 
@@ -252,7 +227,8 @@ class _CardFullViewState extends State<CardFullView> {
                       ),
                     if (vjsonData == null) Text(""),
                     if (vjsonData != null)
-                      if ('${vjsonData['liked']}' == "false" &&
+                      if ('${vjsonData['likes']}'.contains(userid.toString()) ==
+                              false &&
                           '${vjsonData['username']}' != username)
                         Padding(
                           padding: const EdgeInsets.only(left: 300.0),
@@ -272,13 +248,14 @@ class _CardFullViewState extends State<CardFullView> {
                         ),
                     if (vjsonData == null) Text(""),
                     if (vjsonData != null)
-                      if ('${vjsonData['liked']}' == "true" &&
+                      if ('${vjsonData['likes']}'.contains(userid.toString()) ==
+                              true &&
                           '${vjsonData['username']}' != username)
                         Padding(
                           padding: const EdgeInsets.only(left: 300.0),
                           child: IconButton(
                               onPressed: () {
-                                unsaveBlog().then((_) {
+                                unSaveBlog().then((_) {
                                   showLoadingDialog();
                                   Navigator.pushReplacement(
                                       context,

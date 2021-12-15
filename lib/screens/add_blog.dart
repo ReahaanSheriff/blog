@@ -23,9 +23,10 @@ class _AddBlogState extends State<AddBlog> {
   var titlecontroller = new TextEditingController();
   var desccontroller = new TextEditingController();
   var imagecontroller = new TextEditingController();
-  var uid;
+  var uid, ppp;
   late File _image;
   var multipartFile;
+  bool picked = false;
 
   currentUser() async {
     final uri =
@@ -77,14 +78,10 @@ class _AddBlogState extends State<AddBlog> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        SnackBar(
-          content: Text("Image fetched"),
-        );
+        picked = true;
         print('image fetched');
       } else {
-        SnackBar(
-          content: Text("Image cannot able to fetched"),
-        );
+        picked = false;
         print('No image selected.');
       }
     });
@@ -183,52 +180,85 @@ class _AddBlogState extends State<AddBlog> {
         title: Text("Create Blog"),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Image.file(_image),
-            // SizedBox(
-            //   height: 200,
-            //   child: Flexible(
-            //       child:
-            //           // ignore: unnecessary_null_comparison
-            //           _image != null ? Text("Image got") : Text('no Image')),
-            // ),
-            TextFormField(
-              controller: titlecontroller,
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.person),
-                hintText: 'Blog Title',
-                //labelText: 'Blog Title',
+        child: Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: Column(
+            children: [
+              //if (_image.path != "") Image.file(_image),
+              // SizedBox(
+              //   child: Flexible(
+              //       child:
+              //           // ignore: unnecessary_null_comparison
+              //           _image.path != null
+              //               ? Text("Image got")
+              //               : Text('no Image')),
+              // ),
+              SizedBox(
+                height: 20,
               ),
-            ),
+              TextFormField(
+                controller: titlecontroller,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  icon: const Icon(Icons.person),
+                  hintText: 'Blog Title',
+                  //labelText: 'Blog Title',
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: desccontroller,
+                decoration: const InputDecoration(
+                  //isDense: true,
+                  border: OutlineInputBorder(),
 
-            TextFormField(
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              controller: desccontroller,
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.person),
-                hintText: 'Blog Description',
-                //labelText: 'Blog Title',
+                  icon: const Icon(Icons.person),
+
+                  hintText: 'Blog Description',
+                  //labelText: 'Blog Title',
+                ),
               ),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  getImage();
-                },
-                child: Text("Get Image")),
-            ElevatedButton(
-                onPressed: () {
-                  upload(_image).then((_) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CardView(value: widget.value)));
-                  });
-                },
-                child: Text("Create Blog")),
-          ],
+              ElevatedButton(
+                  onPressed: () {
+                    // ignore: non_constant_identifier_names
+                    getImage().then((PickedFile) {
+                      if (picked == true) {
+                        ppp = _image.path;
+                        final snackBar = SnackBar(content: Text(_image.path));
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else {
+                        ppp = "";
+                        final snackBar =
+                            SnackBar(content: Text('Image not picked'));
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    });
+                  },
+                  child: Text("Get Image")),
+              Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: Text(ppp != null ? _image.path : 'No image Selected'),
+              ),
+
+              ElevatedButton(
+                  onPressed: () {
+                    upload(_image).then((_) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CardView(value: widget.value)));
+                    });
+                  },
+                  child: Text("Create Blog")),
+            ],
+          ),
         ),
       ),
     );
