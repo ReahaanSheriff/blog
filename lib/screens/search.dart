@@ -122,7 +122,7 @@ class _SearchBlogState extends State<SearchBlog> {
             ),
             Column(
               children: [
-                if (jsonData == null) Text("No Blogs"),
+                if (jsonData == null || jsonData == "") Text("No Blogs"),
                 if (jsonData != null)
                   for (var i in jsonData.reversed.toList())
                     InkWell(

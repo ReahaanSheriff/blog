@@ -5,7 +5,8 @@ import 'package:blogone/screens/myblog.dart';
 import 'package:blogone/screens/savedblogs_screen.dart';
 import 'package:blogone/screens/search.dart';
 import 'package:blogone/screens/signin_screen.dart';
-
+import 'package:flutter/cupertino.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart' as rf;
 import 'package:http/http.dart' as http;
 import 'package:blogone/screens/cardview.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,11 @@ class _CardViewState extends State<CardView> {
     } on Exception catch (e) {
       print(e);
     }
+  }
+
+  Future<void> _pullRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    viewAllBlogs();
   }
 
   @override
@@ -232,89 +238,96 @@ class _CardViewState extends State<CardView> {
       appBar: AppBar(
         title: Text("Blog app"),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              if (jsonData == null) Text("No Blogs"),
-              if (jsonData != null)
-                for (var i in jsonData.reversed.toList())
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CardFullView(
-                                  blogid: i['blog_id'], value: widget.value)));
-                    },
-                    child: GFCard(
-                      boxFit: BoxFit.cover,
-                      titlePosition: GFPosition.end,
-                      image: Image.network(
-                        "http://manikandanblog.pythonanywhere.com${i['image']}",
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.cover,
-                      ),
-                      showImage: true,
-                      title: GFListTile(
-                        avatar: GFAvatar(
-                          size: 20,
-                          backgroundImage: NetworkImage(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQfUbi5bgcsNaRtcbmG7dR3R8e_kLca43xIg&usqp=CAU'),
-                        ),
-                        titleText: '${i['title']}',
-                        subTitleText: "${i['username']}",
-                        icon: Container(
-                            child: Row(
-                          children: [
-                            if ('${i['liked']}' == "false" &&
-                                '${i['username']}' != username)
-                              Icon(Icons.favorite_border),
-                            if ('${i['liked']}' == "true" &&
-                                '${i['username']}' != username)
-                              Icon(Icons.favorite),
-                            SizedBox(
-                              width: 20,
+      body: RefreshIndicator(
+        //physics: const AlwaysScrollableScrollPhysics(),
+        onRefresh: () => _pullRefresh(),
+        child: ListView(children: [
+          SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  if (jsonData == null) Text("No Blogs"),
+                  if (jsonData != null)
+                    for (var i in jsonData.reversed.toList())
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CardFullView(
+                                      blogid: i['blog_id'],
+                                      value: widget.value)));
+                        },
+                        child: GFCard(
+                          boxFit: BoxFit.cover,
+                          titlePosition: GFPosition.end,
+                          image: Image.network(
+                            "http://manikandanblog.pythonanywhere.com${i['image']}",
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                          ),
+                          showImage: true,
+                          title: GFListTile(
+                            avatar: GFAvatar(
+                              size: 20,
+                              backgroundImage: NetworkImage(
+                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQfUbi5bgcsNaRtcbmG7dR3R8e_kLca43xIg&usqp=CAU'),
                             ),
-                            IconButton(
-                                onPressed: () {
-                                  Share.share(
-                                      'Checkout this post from blog app ' +
-                                          i['title'] +
-                                          ' \n' +
-                                          i['short'] +
-                                          '.....');
+                            titleText: '${i['title']}',
+                            subTitleText: "${i['username']}",
+                            icon: Container(
+                                child: Row(
+                              children: [
+                                if ('${i['liked']}' == "false" &&
+                                    '${i['username']}' != username)
+                                  Icon(Icons.favorite_border),
+                                if ('${i['liked']}' == "true" &&
+                                    '${i['username']}' != username)
+                                  Icon(Icons.favorite),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      Share.share(
+                                          'Checkout this post from blog app ' +
+                                              i['title'] +
+                                              ' \n' +
+                                              i['short'] +
+                                              '.....');
+                                    },
+                                    icon: Icon(Icons.share)),
+                                Padding(padding: EdgeInsets.only(top: 50))
+                              ],
+                            )),
+                          ),
+                          // content: "${i['body']}".length > 20
+                          //     ? Text("${i['body']}".substring(0, 25))
+                          //     : Text("${i['body']}".substring(5)),
+                          content: Text("${i['short']}"),
+                          buttonBar: GFButtonBar(
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.only(left: 220)),
+                              InkWell(
+                                child: Text("Read More"),
+                                onTap: () {
+                                  print("j");
                                 },
-                                icon: Icon(Icons.share)),
-                            Padding(padding: EdgeInsets.only(top: 50))
-                          ],
-                        )),
-                      ),
-                      // content: "${i['body']}".length > 20
-                      //     ? Text("${i['body']}".substring(0, 25))
-                      //     : Text("${i['body']}".substring(5)),
-                      content: Text("${i['short']}"),
-                      buttonBar: GFButtonBar(
-                        children: <Widget>[
-                          Padding(padding: EdgeInsets.only(left: 220)),
-                          InkWell(
-                            child: Text("Read More"),
-                            onTap: () {
-                              print("j");
-                            },
+                              ),
+                              Icon(
+                                Icons.double_arrow,
+                                color: Colors.black,
+                              ),
+                            ],
                           ),
-                          Icon(
-                            Icons.double_arrow,
-                            color: Colors.black,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-            ],
+                ],
+              ),
+            ),
           ),
-        ),
+        ]),
       ),
     );
   }

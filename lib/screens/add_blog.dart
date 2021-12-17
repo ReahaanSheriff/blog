@@ -249,11 +249,12 @@ class _AddBlogState extends State<AddBlog> {
               ElevatedButton(
                   onPressed: () {
                     upload(_image).then((_) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CardView(value: widget.value)));
+                      Navigator.pop(context);
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             CardView(value: widget.value)));
                     });
                   },
                   child: Text("Create Blog")),
