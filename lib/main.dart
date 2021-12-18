@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:blogone/screens/card.dart';
 import 'package:blogone/screens/signin_screen.dart';
 import 'package:blogone/screens/sharedPref.dart';
@@ -14,6 +12,7 @@ void main() async {
   print('---------------------------');
   print(token);
   print('---------------------------');
+
   //runApp(MyApp());
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -31,30 +30,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  currentUser() async {
-    final uri =
-        Uri.parse('http://manikandanblog.pythonanywhere.com/currentuser/');
-    final headers = {'Authorization': 'Token ' + token.toString()};
-    var currentuserresponse, responseBody, statusCode;
-
-    try {
-      currentuserresponse = await http.get(
-        uri,
-        headers: headers,
-        //body: jsonBody,
-        //encoding: encoding,
-      );
-      statusCode = currentuserresponse.statusCode;
-      responseBody = jsonDecode(currentuserresponse.body);
-
-      //print(responseBody['id']);
-    } on Exception catch (e) {
-      print(e);
-      print('error on current user');
-    }
-    return statusCode;
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -63,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: currentUser() != 201 ? "signin" : "/",
+      initialRoute: token == null ? "signin" : "/",
       routes: {
         '/': (context) => CardView(value: token),
         "signin": (context) => SignIn()

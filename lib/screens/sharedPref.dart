@@ -16,7 +16,6 @@ class SharedPreferenceHelper {
 
       return prefs.getString(tokenKey);
     } on Exception catch (e) {
-      // TODO
       print(e);
     }
   }

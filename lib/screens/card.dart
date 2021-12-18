@@ -6,7 +6,7 @@ import 'package:blogone/screens/savedblogs_screen.dart';
 import 'package:blogone/screens/search.dart';
 import 'package:blogone/screens/signin_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' as rf;
+
 import 'package:http/http.dart' as http;
 import 'package:blogone/screens/cardview.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +121,6 @@ class _CardViewState extends State<CardView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     currentUser();
     viewAllBlogs();

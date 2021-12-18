@@ -77,7 +77,7 @@ class _SavedBlogsState extends State<SavedBlogs> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     savedBlogs();
     Timer(Duration(seconds: 1), () {

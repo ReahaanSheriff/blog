@@ -91,7 +91,6 @@ class _MyBlogState extends State<MyBlog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     currentUser();
     viewUserBlogs();

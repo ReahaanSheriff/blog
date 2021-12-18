@@ -74,7 +74,6 @@ class _SearchBlogState extends State<SearchBlog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     currentUser();
   }
