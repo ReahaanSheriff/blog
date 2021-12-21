@@ -346,7 +346,7 @@ class _SignInState extends State<SignIn> {
                 child: Text("SIGNUP")),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
+                  Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => Login()));
                 },
                 child: Text("Already Have an account? Login")),

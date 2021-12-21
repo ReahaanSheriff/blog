@@ -311,7 +311,12 @@ class _CardViewState extends State<CardView> {
                               InkWell(
                                 child: Text("Read More"),
                                 onTap: () {
-                                  print("j");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CardFullView(
+                                              blogid: i['blog_id'],
+                                              value: widget.value)));
                                 },
                               ),
                               Icon(

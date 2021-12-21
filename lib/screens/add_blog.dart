@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -72,8 +73,7 @@ class _AddBlogState extends State<AddBlog> {
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
+    try {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
         picked = true;
@@ -82,7 +82,18 @@ class _AddBlogState extends State<AddBlog> {
         picked = false;
         print('No image selected.');
       }
-    });
+    } on Exception catch (e) {
+      Fluttertoast.showToast(
+          msg: "No Image Selected $e",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 4,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+
+    setState(() {});
   }
 
   upload(File imageFile) async {
@@ -224,36 +235,63 @@ class _AddBlogState extends State<AddBlog> {
                   onPressed: () {
                     // ignore: non_constant_identifier_names
                     getImage().then((PickedFile) {
-                      if (picked == true) {
-                        ppp = _image.path;
-                        final snackBar = SnackBar(content: Text(_image.path));
+                      try {
+                        if (picked == true) {
+                          ppp = _image.path;
+                          final snackBar = SnackBar(content: Text(_image.path));
 
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } else {
-                        ppp = "";
-                        final snackBar =
-                            SnackBar(content: Text('Image not picked'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          ppp = "";
+                          final snackBar =
+                              SnackBar(content: Text('Image not picked'));
 
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      } on Exception catch (e) {
+                        Fluttertoast.showToast(
+                            msg: "No Image Selected $e",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 4,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
                       }
                     });
                   },
                   child: Text("Get Image")),
               Padding(
                 padding: const EdgeInsets.only(left: 50),
-                child: Text(ppp != null ? _image.path : 'No image Selected'),
+                child:
+                    Text(picked != false ? _image.path : 'No image Selected'),
               ),
 
               ElevatedButton(
                   onPressed: () {
-                    upload(_image).then((_) {
-                      Navigator.pop(context);
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             CardView(value: widget.value)));
-                    });
+                    final String title = titlecontroller.text.trim();
+                    final String desc = desccontroller.text.trim();
+
+                    if (title.isNotEmpty && desc.isNotEmpty && ppp != null) {
+                      upload(_image).then((_) {
+                        Navigator.pop(context);
+
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             CardView(value: widget.value)));
+                      });
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: "Fields Cannot be empty",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 4,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                    }
                   },
                   child: Text("Create Blog")),
             ],

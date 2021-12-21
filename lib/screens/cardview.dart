@@ -128,7 +128,6 @@ class _CardFullViewState extends State<CardFullView> {
 
   @override
   void initState() {
-   
     super.initState();
     currentUser();
     viewOneBlog();

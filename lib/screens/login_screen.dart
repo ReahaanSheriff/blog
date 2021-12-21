@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:blogone/screens/card.dart';
+import 'package:blogone/screens/signin_screen.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:blogone/screens/forgetpassword_screen.dart';
@@ -198,6 +199,7 @@ class _LoginState extends State<Login> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       CardView(value: token)));
+                          //Navigator.pop(context);
                         } else {
                           Fluttertoast.showToast(
                               msg: "Invalid Credentials",
@@ -230,7 +232,13 @@ class _LoginState extends State<Login> {
                     MaterialPageRoute(builder: (context) => ForgetPassword()));
               },
               child: Text("Forget Password?"),
-            )))
+            ))),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => SignIn()));
+                },
+                child: Text("Dont Have an account? Signin")),
           ],
         ),
       ),
