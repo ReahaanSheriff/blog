@@ -267,33 +267,36 @@ class _AddBlogState extends State<AddBlog> {
                     Text(picked != false ? _image.path : 'No image Selected'),
               ),
 
-              ElevatedButton(
-                  onPressed: () {
-                    final String title = titlecontroller.text.trim();
-                    final String desc = desccontroller.text.trim();
+              Padding(
+                padding: const EdgeInsets.only(bottom: 80.0),
+                child: ElevatedButton(
+                    onPressed: () {
+                      final String title = titlecontroller.text.trim();
+                      final String desc = desccontroller.text.trim();
 
-                    if (title.isNotEmpty && desc.isNotEmpty && ppp != null) {
-                      upload(_image).then((_) {
-                        Navigator.pop(context);
+                      if (title.isNotEmpty && desc.isNotEmpty && ppp != null) {
+                        upload(_image).then((_) {
+                          Navigator.pop(context);
 
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             CardView(value: widget.value)));
-                      });
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "Fields Cannot be empty",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 4,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    }
-                  },
-                  child: Text("Create Blog")),
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             CardView(value: widget.value)));
+                        });
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Fields Cannot be empty",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 4,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }
+                    },
+                    child: Text("Create Blog")),
+              ),
             ],
           ),
         ),

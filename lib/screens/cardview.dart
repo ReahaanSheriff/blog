@@ -205,7 +205,7 @@ class _CardFullViewState extends State<CardFullView> {
                 ),
               ),
             Container(
-              height: 700,
+              //height: 700,
               decoration: BoxDecoration(
                 color: Colors.white,
               ),
@@ -344,7 +344,8 @@ class _CardFullViewState extends State<CardFullView> {
                             fontSize: 18.0,
                             color: Colors.grey,
                             letterSpacing: 1),
-                      )
+                      ),
+                    SizedBox(height: 40.0),
                   ],
                 ),
               ),
