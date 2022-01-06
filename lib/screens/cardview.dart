@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:blogone/screens/report.dart';
 import 'package:blogone/screens/savedblogs_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -130,6 +132,7 @@ class _CardFullViewState extends State<CardFullView> {
   void initState() {
     super.initState();
     currentUser();
+
     viewOneBlog();
   }
 
@@ -285,19 +288,23 @@ class _CardFullViewState extends State<CardFullView> {
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 16.0),
                               ),
-                            //SizedBox(width: 130.0),
-                            // IconButton(
-                            //     icon: Icon(
-                            //       widget.blog.liked == "true"
-                            //           ? Icons.bookmark
-                            //           : Icons.bookmark_border,
-                            //       color: Colors.black,
-                            //       size: 30,
-                            //     ),
-                            //     onPressed: () {}),
+                            SizedBox(width: 100.0),
+                            if (vjsonData == null) Text(""),
+                            if (vjsonData != null &&
+                                '${vjsonData['username']}' != username)
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Report(
+                                              value: widget.value,
+                                              blogid: widget.blogid)));
+                                },
+                                child: Text("Report"),
+                              ),
                           ],
                         ),
-                        SizedBox(width: 20.0),
                         Row(
                           children: <Widget>[
                             // Icon(

@@ -203,6 +203,17 @@ class _AddBlogState extends State<AddBlog> {
               //               : Text('no Image')),
               // ),
               SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  "If blog involves any nudity, violence, harrassment, hate speech, terrorism blog will be REMOVED",
+                  style:
+                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
                 height: 20,
               ),
               TextFormField(
